@@ -5,12 +5,46 @@
 //Dependencies
 
 const http = require("http");
+const https = require("https");
 var url = require("url");
 var StringDecoder = require("string_decoder").StringDecoder;
 var config = require('./config');
+var fs = require('fs');
+var data = require('./lib/data');
 
-//Server should respond to all requests with a string
-var server = http.createServer(function(req, res) {
+// @TODO delete this
+data.delete('test', 'newFile', function(err, data){
+  console.log('This was the error', err);
+});
+
+//instantiating the server
+var httpServer = http.createServer(function(req, res) {
+  unifiedServer(req, res);
+});
+
+//Server starts
+httpServer.listen(config.httpsPort, function() {
+  console.log("Sever listening on port "+config.httpsPort );
+});
+
+//Instantiate the https server
+var httpsServerOptions = {
+  'key' : fs.readFileSync('./https/key.pem'),
+  'cert' : fs.readFileSync('./https/cert.pem')
+};
+var httpsServer = https.createServer(httpsServerOptions, function(req, res) {
+  unifiedServer(req, res);
+});
+
+//start https server
+httpsServer.listen(config.httpPort, function() {
+  console.log("Sever listening on port "+config.httpPort );
+});
+
+
+
+//Unified server for both http and https
+var unifiedServer = function(req, res){
   //Get an url and parse it
   var parsedUrl = url.parse(req.url, true);
   // get the path from the url
@@ -69,25 +103,20 @@ var server = http.createServer(function(req, res) {
       console.log("Returning this response: " + statusCode, payloadString);
     });
   });
-});
-
-//Server starts
-server.listen(config.port, function() {
-  console.log("Sever listening on port "+config.port+ " in "+config.envName+" mode" );
-});
+};
 //define handlers
 var handlers = {};
 
-//sample handler
-handlers.sample = function(data, callback) {
-  //callback of http staus code and payload
-  callback(406, { name: "sample handler" });
-};
+
+// ping handler
+handlers.ping = function(data, callback){
+  callback(200);
+}
 //not found handler
 handlers.notFound = function(data, callback) {
   callback(404);
 };
 //define a router
 var router = {
-  sample: handlers.sample
+  'ping': handlers.ping
 };
