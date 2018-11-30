@@ -15,6 +15,12 @@ environments.staging = {
 		'accountSid' : 'AC28fa589c49d94ca3c6fc636c74f5c5e7',
 		'authToken' : '89f4fa406944d78cd90646ad37a47811',
 		'fromPhone' : '+573152503647'
+	},
+	'templateGlobals': {
+		'appName' : 'Uptime Monitor',
+		'companyName' : 'Lein Development, Inc',
+		'yearCreated' : '2018',
+		'baseUrl' : 'http://localhost:3001/'
 	}
 };
 
@@ -30,6 +36,11 @@ environments.production = {
 		'accountSid' : 'AC28fa589c49d94ca3c6fc636c74f5c5e7',
 		'authToken' : '89f4fa406944d78cd90646ad37a47811',
 		'fromPhone' : '+573152503647'
+	},
+	'templateGlobals' : {
+		'appName' : 'Uptime Monitor',
+		'companyName' : 'Lein Development, Inc',
+		'yearCreated' : '2018'
 	}
 };
 
